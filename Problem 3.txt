@@ -1,0 +1,51 @@
+#include <bits/stdc++.h>
+using namespace std;
+#ifdef tabr
+#include "library/debug.cpp"
+#else
+#define debug(...)
+#endif
+
+int main() {
+    ios::sync_with_stdio(false);
+    cin.tie(0);
+    int tt;
+    cin >> tt;
+    for (int qq = 1; qq <= tt; qq++) {
+        cout << "Case #" << qq << ": ";
+        int n;
+        cin >> n;
+        vector<int> a(n);
+        for (int i = 0; i < n; i++) {
+            cin >> a[i];
+        }
+        vector<vector<int>> g(n);
+        for (int i = 0; i < n - 1; i++) {
+            int x, y;
+            cin >> x >> y;
+            x--;
+            y--;
+            if (a[x] == a[y]) {
+                continue;
+            }
+            if (a[x] < a[y]) {
+                swap(x, y);
+            }
+            g[x].emplace_back(y);
+        }
+        vector<int> dp(n);
+        vector<int> order(n);
+        iota(order.begin(), order.end(), 0);
+        sort(order.begin(), order.end(), [&](int i, int j) {
+            return a[i] < a[j];
+        });
+        for (int i : order) {
+            for (int j : g[i]) {
+                dp[i] += dp[j];
+            }
+            dp[i]++;
+        }
+        cout << *max_element(dp.begin(), dp.end()) << '\n';
+    }
+    return 0;
+}
